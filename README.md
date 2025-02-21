@@ -1,9 +1,9 @@
 # 🔒 safe-password-utils
 
 [![CI](https://github.com/TheRealPerson98/safe-password-utils/actions/workflows/ci.yml/badge.svg)](https://github.com/TheRealPerson98/safe-password-utils/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/safe-password-utils.svg)](https://www.npmjs.com/package/safe-password-utils)
+[![npm version](https://img.shields.io/npm/v/safepassword-utils.svg)](https://www.npmjs.com/package/safepassword-utils)
 [![License: MPL-2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-[![Node.js Version](https://img.shields.io/node/v/safe-password-utils)](https://nodejs.org)
+[![Node.js Version](https://img.shields.io/node/v/safepassword-utils)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 
 A secure and flexible password validation utility for TypeScript/JavaScript applications with customizable strength requirements.
