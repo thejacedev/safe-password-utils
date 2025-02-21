@@ -1,5 +1,5 @@
 {
-  "ignores": ["@types/*", "depcheck"],
+  "ignores": ["@types/*", "depcheck", "rimraf"],
   "specials": [
     "jest"
   ]
