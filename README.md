@@ -1,5 +1,6 @@
 # 🔒 safe-password-utils
 
+[![CI](https://github.com/TheRealPerson98/safe-password-utils/actions/workflows/ci.yml/badge.svg)](https://github.com/TheRealPerson98/safe-password-utils/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/safe-password-utils.svg)](https://www.npmjs.com/package/safe-password-utils)
 [![License: MPL-2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 [![Node.js Version](https://img.shields.io/node/v/safe-password-utils)](https://nodejs.org)
@@ -20,11 +21,11 @@ A secure and flexible password validation utility for TypeScript/JavaScript appl
 ## 📦 Installation
 
 ```bash
-npm install safe-password-utils
+npm i safepassword-utils
 # or
-yarn add safe-password-utils
+yarn add safepassword-utils
 # or
-pnpm add safe-password-utils
+pnpm add safepassword-utils
 ```
 
 ## 🚀 Quick Start

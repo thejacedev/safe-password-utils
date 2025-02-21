@@ -1,5 +1,5 @@
 {
-    "name": "safe-password-utils",
+    "name": "safepassword-utils",
     "version": "0.0.1",
     "description": "A secure and flexible password generation and validation utility for TypeScript/JavaScript applications",
     "main": "dist/index.js",
