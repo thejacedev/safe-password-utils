@@ -1,20 +1,13 @@
 {
     "name": "safepassword-utils",
-    "version": "1.0.5",
+    "version": "2.0.0",
     "description": "A secure and flexible password generation and validation utility for TypeScript/JavaScript applications",
     "main": "./dist/index.js",
-    "module": "./dist/esm/index.js",
     "types": "./dist/index.d.ts",
+    "type": "module",
     "files": [
         "dist"
     ],
-    "exports": {
-        ".": {
-            "require": "./dist/cjs/index.js",
-            "import": "./dist/cjs/index.js",
-            "types": "./dist/cjs/index.d.ts"
-        }
-    },
     "engines": {
         "node": ">=18.0.0"
     },
