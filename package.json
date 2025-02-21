@@ -25,7 +25,8 @@
         "prepare": "npm run build",
         "lint": "eslint \"lib/**\"",
         "lint:fix": "eslint \"lib/**\" --fix",
-        "format": "prettier --write \"lib/**/*.ts\""
+        "format": "prettier --write \"lib/**/*.ts\"",
+        "check-deps": "depcheck"
     },
     "keywords": [
         "password",
