@@ -18,6 +18,9 @@ A secure and flexible password validation utility for TypeScript/JavaScript appl
 - 📝 TypeScript support
 - 🧪 Comprehensive test coverage
 - 🚫 Common password detection (10k to 10M passwords)
+- 🎲 Secure password generation
+- 🔢 Password entropy calculation
+- ⏱️ Crack time estimation
 
 ## 🚫 Common Password Detection
 
@@ -31,6 +34,91 @@ console.log(isCommon); // true
 // Use different size password lists
 const sizes = ['10k', '100k', '250k', '500k', '1m', '2m', '5m', '10m'];
 const result = await isCommonPassword('mypassword', '1m'); // Checks against 1 million passwords
+```
+
+## 🎲 Password Generation
+
+```typescript
+import { generatePassword } from 'safe-password-utils';
+
+// Generate a strong password with default options (16 characters, all character types)
+const password = generatePassword();
+
+// Generate a password with custom options
+const customPassword = generatePassword({
+  length: 20,                    // Custom length
+  includeUppercase: true,        // Include uppercase letters
+  includeLowercase: true,        // Include lowercase letters
+  includeNumbers: true,          // Include numbers
+  includeSymbols: true,          // Include special characters
+  excludeSimilarCharacters: true,  // Exclude similar characters (i, l, 1, L, o, 0, O)
+  excludeAmbiguousCharacters: true // Exclude ambiguous characters ({}, [], (), /\, etc.)
+});
+
+// Generate a simple password with only lowercase and numbers
+const simplePassword = generatePassword({
+  includeUppercase: false,
+  includeSymbols: false
+});
+```
+
+## 🔢 Password Entropy
+
+```typescript
+import { calculatePasswordEntropy } from 'safe-password-utils';
+
+// Calculate password entropy
+const result = calculatePasswordEntropy('MySecureP@ssw0rd');
+console.log(result);
+// {
+//   entropy: 75.98,        // Entropy in bits
+//   poolSize: 95,         // Size of character pool
+//   length: 14,          // Password length
+//   characterSets: {     // Used character types
+//     lowercase: true,
+//     uppercase: true,
+//     numbers: true,
+//     symbols: true
+//   }
+// }
+
+// Interpreting entropy values:
+// < 28 bits   = Very Weak    (may be cracked instantly)
+// 28-35 bits  = Weak        (may be cracked in seconds)
+// 36-59 bits  = Reasonable  (may take hours to crack)
+// 60-127 bits = Strong      (may take years to crack)
+// 128+ bits   = Very Strong (practically uncrackable with current technology)
+```
+
+## ⏱️ Crack Time Estimation
+
+```typescript
+import { estimateCrackTime } from 'safe-password-utils';
+
+// Estimate how long it would take to crack a password
+const result = estimateCrackTime('MySecureP@ssw0rd');
+console.log(result);
+// {
+//   // Raw time estimates in seconds
+//   onlineThrottling100PerHour: 1.2e24,
+//   onlineNoThrottling10PerSecond: 3.4e20,
+//   offlineSlowHashing1e4PerSecond: 3.4e16,
+//   offlineFastHashing1e10PerSecond: 3.4e10,
+//   
+//   // Human readable estimates
+//   timeToCrack: {
+//     onlineThrottling: 'centuries',          // Online attack, limited to 100 attempts per hour
+//     onlineNoThrottling: '108 years',        // Online attack, 10 attempts per second
+//     offlineSlowHashing: '13 months',        // Offline attack, 10k attempts per second
+//     offlineFastHashing: '4 days'           // Offline attack, 10B attempts per second
+//   }
+// }
+
+// Different attack scenarios:
+// 1. Online throttled: Simulates a login form with rate limiting (100 attempts/hour)
+// 2. Online no throttling: Simulates unprotected online system (10 attempts/second)
+// 3. Offline slow hash: Offline attack with slow hash function (10k attempts/second)
+// 4. Offline fast hash: Offline attack with fast hash function (10B attempts/second)
 ```
 
 ## 📦 Installation
@@ -276,6 +364,21 @@ Analyzes password strength based on length, character diversity, and custom requ
   - `minSpecial?: number` - Minimum number of special characters
 - `options?: PasswordOption[]` - Custom strength level options
 
+### `generatePassword(options?)`
+
+Generates a secure random password with customizable options.
+
+#### Parameters
+
+- `options?: PasswordGenerationOptions` - Optional generation settings
+  - `length?: number` - Password length (default: 16)
+  - `includeUppercase?: boolean` - Include uppercase letters (default: true)
+  - `includeLowercase?: boolean` - Include lowercase letters (default: true)
+  - `includeNumbers?: boolean` - Include numbers (default: true)
+  - `includeSymbols?: boolean` - Include special characters (default: true)
+  - `excludeSimilarCharacters?: boolean` - Exclude similar characters like i, l, 1, O, 0 (default: false)
+  - `excludeAmbiguousCharacters?: boolean` - Exclude ambiguous characters like {}, [], () (default: false)
+
 #### Default Strength Levels
 
 | Level    | Min Length | Min Diversity | Description                    |
@@ -285,27 +388,48 @@ Analyzes password strength based on length, character diversity, and custom requ
 | Medium   | 10        | 4            | Good password strength         |
 | Strong   | 12        | 4            | Excellent password strength    |
 
+### `calculatePasswordEntropy(password)`
+
+Calculates the entropy (randomness) of a password in bits.
+
+#### Parameters
+
+- `password: string` - The password to analyze
+
 #### Returns
 
-```typescript
-interface PasswordStrength {
-  id: 0 | 1 | 2 | 3;
-  value: 'Too weak' | 'Weak' | 'Medium' | 'Strong';
-  contains: {
-    lowercase: boolean;
-    uppercase: boolean;
-    number: boolean;
-    symbol: boolean;
-  };
-  length: number;
-  counts?: {
-    lowercase: number;
-    uppercase: number;
-    numbers: number;
-    special: number;
-  };
-}
-```
+- `EntropyDetails` object containing:
+  - `entropy: number` - Entropy value in bits
+  - `poolSize: number` - Size of the character pool
+  - `length: number` - Password length
+  - `characterSets: object` - Used character types
+    - `lowercase: boolean`
+    - `uppercase: boolean`
+    - `numbers: boolean`
+    - `symbols: boolean`
+
+### `estimateCrackTime(password)`
+
+Estimates the time required to crack a password under different attack scenarios.
+
+#### Parameters
+
+- `password: string` - The password to analyze
+
+#### Returns
+
+- `CrackTimeEstimates` object containing:
+  - Raw time estimates (in seconds):
+    - `onlineThrottling100PerHour: number`
+    - `onlineNoThrottling10PerSecond: number`
+    - `offlineSlowHashing1e4PerSecond: number`
+    - `offlineFastHashing1e10PerSecond: number`
+  - Human readable estimates:
+    - `timeToCrack: object`
+      - `onlineThrottling: string`
+      - `onlineNoThrottling: string`
+      - `offlineSlowHashing: string`
+      - `offlineFastHashing: string`
 
 ## 🤝 Contributing
 
