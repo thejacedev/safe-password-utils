@@ -1,0 +1,6 @@
+{
+  "ignores": ["@types/*", "depcheck"],
+  "specials": [
+    "jest"
+  ]
+} 
