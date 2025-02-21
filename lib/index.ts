@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { randomBytes } from 'crypto';
+import passwordList from './data/common-passwords-10m.json';
 
 export interface PasswordRequirements {
   requireCapital?: boolean;
@@ -68,6 +69,16 @@ export interface PasswordStrength {
 }
 
 const commonPasswordsCache = new Map<string, Set<string>>();
+const LIST_SIZES = {
+  '10k': 10000,
+  '100k': 100000,
+  '250k': 250000,
+  '500k': 500000,
+  '1m': 1000000,
+  '2m': 2000000,
+  '5m': 5000000,
+  '10m': 10000000,
+};
 
 /**
  * Checks if a password is in the list of common passwords
@@ -81,12 +92,8 @@ export async function isCommonPassword(
 ): Promise<boolean> {
   const cacheKey = listSize;
   if (!commonPasswordsCache.has(cacheKey)) {
-    try {
-      const passwords = await import(`./data/common-passwords-${listSize}.json`);
-      commonPasswordsCache.set(cacheKey, new Set(passwords.default));
-    } catch (_error) {
-      return false;
-    }
+    const passwords = (passwordList as string[]).slice(0, LIST_SIZES[listSize]);
+    commonPasswordsCache.set(cacheKey, new Set(passwords));
   }
   return commonPasswordsCache.get(cacheKey)?.has(password) ?? false;
 }

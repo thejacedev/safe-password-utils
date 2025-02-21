@@ -25,7 +25,7 @@ A secure and flexible password validation utility for TypeScript/JavaScript appl
 ## 🚫 Common Password Detection
 
 ```typescript
-import { isCommonPassword } from 'safe-password-utils';
+import { isCommonPassword } from 'safepassword-utils';
 
 // Check if a password is commonly used
 const isCommon = await isCommonPassword('password123');
@@ -39,7 +39,7 @@ const result = await isCommonPassword('mypassword', '1m'); // Checks against 1 m
 ## 🎲 Password Generation
 
 ```typescript
-import { generatePassword } from 'safe-password-utils';
+import { generatePassword } from 'safepassword-utils';
 
 // Generate a strong password with default options (16 characters, all character types)
 const password = generatePassword();
@@ -65,7 +65,7 @@ const simplePassword = generatePassword({
 ## 🔢 Password Entropy
 
 ```typescript
-import { calculatePasswordEntropy } from 'safe-password-utils';
+import { calculatePasswordEntropy } from 'safepassword-utils';
 
 // Calculate password entropy
 const result = calculatePasswordEntropy('MySecureP@ssw0rd');
@@ -93,7 +93,7 @@ console.log(result);
 ## ⏱️ Crack Time Estimation
 
 ```typescript
-import { estimateCrackTime } from 'safe-password-utils';
+import { estimateCrackTime } from 'safepassword-utils';
 
 // Estimate how long it would take to crack a password
 const result = estimateCrackTime('MySecureP@ssw0rd');
@@ -124,7 +124,7 @@ console.log(result);
 ## 📦 Installation
 
 ```bash
-npm i safepassword-utils
+npm install safepassword-utils
 # or
 yarn add safepassword-utils
 # or
@@ -134,7 +134,7 @@ pnpm add safepassword-utils
 ## 🚀 Quick Start
 
 ```typescript
-import { checkPasswordStrength } from 'safe-password-utils';
+import { checkPasswordStrength } from 'safepassword-utils';
 
 // Basic usage
 const result = checkPasswordStrength('MyPassword123!');
@@ -163,6 +163,8 @@ console.log(result);
 ### Custom Requirements
 
 ```typescript
+import { checkPasswordStrength } from 'safepassword-utils';
+
 const requirements = {
   requireCapital: true,
   requireNumber: true,
@@ -178,6 +180,8 @@ const result = checkPasswordStrength('MyPass12!', requirements);
 ### Custom Strength Options
 
 ```typescript
+import { checkPasswordStrength } from 'safepassword-utils';
+
 const customOptions = [
   {
     id: 0,
