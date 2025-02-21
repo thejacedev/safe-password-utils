@@ -1,3 +1,6 @@
+import { readFile } from 'fs/promises';
+import { join } from 'path';
+
 export interface PasswordRequirements {
   requireCapital?: boolean;
   requireNumber?: boolean;
@@ -5,6 +8,8 @@ export interface PasswordRequirements {
   minCapitals?: number;
   minNumbers?: number;
   minSpecial?: number;
+  rejectCommonPasswords?: boolean;
+  commonPasswordListSize?: '10k' | '100k' | '250k' | '500k' | '1m' | '2m' | '5m' | '10m';
 }
 
 export interface PasswordOption {
@@ -59,9 +64,33 @@ export interface PasswordStrength {
   };
 }
 
+const commonPasswordsCache = new Map<string, Set<string>>();
+
+/**
+ * Checks if a password is in the list of common passwords
+ * @param password The password to check
+ * @param listSize Size of the common password list to check against ('10k', '100k', '250k', '500k', '1m', '2m', '5m', '10m')
+ * @returns true if the password is common, false otherwise
+ */
+export async function isCommonPassword(
+  password: string,
+  listSize: '10k' | '100k' | '250k' | '500k' | '1m' | '2m' | '5m' | '10m' = '100k'
+): Promise<boolean> {
+  const cacheKey = listSize;
+  if (!commonPasswordsCache.has(cacheKey)) {
+    try {
+      const passwords = await import(`./data/common-passwords-${listSize}.json`);
+      commonPasswordsCache.set(cacheKey, new Set(passwords.default));
+    } catch (error) {
+      console.warn(`Failed to load common passwords list (${listSize}):`, error);
+      return false;
+    }
+  }
+  return commonPasswordsCache.get(cacheKey)?.has(password) ?? false;
+}
 export function checkPasswordStrength(
   password: string,
-  requirements?: PasswordRequirements,
+  requirements?: Omit<PasswordRequirements, 'rejectCommonPasswords' | 'commonPasswordListSize'>,
   options: PasswordOption[] = defaultOptions
 ): PasswordStrength {
   const contains = {
@@ -83,8 +112,14 @@ export function checkPasswordStrength(
 
   // Check if password meets requirements
   if (requirements) {
-    const { requireCapital, requireNumber, requireSpecial, minCapitals, minNumbers, minSpecial } =
-      requirements;
+    const { 
+      requireCapital, 
+      requireNumber, 
+      requireSpecial, 
+      minCapitals, 
+      minNumbers, 
+      minSpecial,
+    } = requirements;
 
     if (requireCapital && !contains.uppercase)
       return { id: 0, value: 'Too weak', contains, length };
@@ -129,3 +164,4 @@ export function checkPasswordStrength(
     counts,
   };
 }
+

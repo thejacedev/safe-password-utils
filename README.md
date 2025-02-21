@@ -17,6 +17,21 @@ A secure and flexible password validation utility for TypeScript/JavaScript appl
 - 🔍 Character type detection
 - 📝 TypeScript support
 - 🧪 Comprehensive test coverage
+- 🚫 Common password detection (10k to 10M passwords)
+
+## 🚫 Common Password Detection
+
+```typescript
+import { isCommonPassword } from 'safe-password-utils';
+
+// Check if a password is commonly used
+const isCommon = await isCommonPassword('password123');
+console.log(isCommon); // true
+
+// Use different size password lists
+const sizes = ['10k', '100k', '250k', '500k', '1m', '2m', '5m', '10m'];
+const result = await isCommonPassword('mypassword', '1m'); // Checks against 1 million passwords
+```
 
 ## 📦 Installation
 
