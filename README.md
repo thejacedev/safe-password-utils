@@ -21,6 +21,8 @@ A secure and flexible password validation utility for TypeScript/JavaScript appl
 - 🎲 Secure password generation
 - 🔢 Password entropy calculation
 - ⏱️ Crack time estimation
+- 🔍 Pattern detection and analysis
+- 🧠 Comprehensive password analysis
 
 ## 🚫 Common Password Detection
 
@@ -119,6 +121,88 @@ console.log(result);
 // 2. Online no throttling: Simulates unprotected online system (10 attempts/second)
 // 3. Offline slow hash: Offline attack with slow hash function (10k attempts/second)
 // 4. Offline fast hash: Offline attack with fast hash function (10B attempts/second)
+```
+
+## 🔍 Password Pattern Analysis
+
+```typescript
+import { analyzePasswordPatterns } from 'safepassword-utils';
+
+// Analyze a password for common patterns
+const analysis = analyzePasswordPatterns('qwerty123');
+console.log(analysis);
+// {
+//   hasKeyboardPattern: true,
+//   hasSequentialChars: false,
+//   hasRepeatedChars: false,
+//   hasDatePattern: false,
+//   patternRiskScore: 30,
+//   detectedPatterns: ['Keyboard pattern: "qwerty"'],
+//   suggestions: ['Avoid keyboard patterns like "qwerty" or "asdfgh"']
+// }
+
+// Analyze a password with multiple patterns
+const complexAnalysis = analyzePasswordPatterns('abc123456');
+console.log(complexAnalysis);
+// {
+//   hasKeyboardPattern: false,
+//   hasSequentialChars: true,
+//   hasRepeatedChars: false,
+//   hasDatePattern: false,
+//   patternRiskScore: 25,
+//   detectedPatterns: ['Sequential letters: "abc"', 'Sequential numbers: "123"'],
+//   suggestions: ['Avoid sequential characters like "abc" or "123"']
+// }
+```
+
+## 🧠 Comprehensive Password Analysis
+
+```typescript
+import { analyzePassword } from 'safepassword-utils';
+
+// Get a complete analysis of a password
+const fullAnalysis = analyzePassword('Password123!');
+console.log(fullAnalysis);
+// {
+//   // Strength assessment
+//   strength: {
+//     id: 2,
+//     value: 'Medium',
+//     contains: { lowercase: true, uppercase: true, number: true, symbol: true },
+//     length: 12,
+//     counts: { lowercase: 7, uppercase: 1, numbers: 3, special: 1 }
+//   },
+//   // Entropy calculation
+//   entropy: {
+//     entropy: 70.24,
+//     poolSize: 95,
+//     length: 12,
+//     characterSets: { lowercase: true, uppercase: true, numbers: true, symbols: true }
+//   },
+//   // Crack time estimation
+//   crackTime: {
+//     onlineThrottling100PerHour: 3.8e21,
+//     onlineNoThrottling10PerSecond: 1.1e18,
+//     offlineSlowHashing1e4PerSecond: 1.1e14,
+//     offlineFastHashing1e10PerSecond: 1.1e8,
+//     timeToCrack: {
+//       onlineThrottling: 'centuries',
+//       onlineNoThrottling: 'centuries',
+//       offlineSlowHashing: '3 years',
+//       offlineFastHashing: '3 days'
+//     }
+//   },
+//   // Pattern analysis
+//   patterns: {
+//     hasKeyboardPattern: false,
+//     hasSequentialChars: false,
+//     hasRepeatedChars: false,
+//     hasDatePattern: false,
+//     patternRiskScore: 0,
+//     detectedPatterns: [],
+//     suggestions: []
+//   }
+// }
 ```
 
 ## 📦 Installation
@@ -434,6 +518,41 @@ Estimates the time required to crack a password under different attack scenarios
       - `onlineNoThrottling: string`
       - `offlineSlowHashing: string`
       - `offlineFastHashing: string`
+
+### `analyzePasswordPatterns(password)`
+
+Analyzes a password for common patterns that might make it vulnerable to guessing or dictionary attacks.
+
+#### Parameters
+
+- `password: string` - The password to analyze
+
+#### Returns
+
+- `PasswordPatternAnalysis` object containing:
+  - `hasKeyboardPattern: boolean` - Whether the password contains keyboard patterns (e.g., 'qwerty')
+  - `hasSequentialChars: boolean` - Whether the password contains sequential characters (e.g., 'abc', '123')
+  - `hasRepeatedChars: boolean` - Whether the password contains repeated characters (e.g., 'aaa', '111')
+  - `hasDatePattern: boolean` - Whether the password contains date patterns (e.g., '1990', '2023')
+  - `patternRiskScore: number` - Overall risk score from 0 (no patterns) to 100 (highly patterned)
+  - `detectedPatterns: string[]` - Specific patterns detected in the password
+  - `suggestions: string[]` - Suggestions to improve the password
+
+### `analyzePassword(password)`
+
+Provides a comprehensive analysis of a password by combining strength checking, entropy calculation, crack time estimation, and pattern detection.
+
+#### Parameters
+
+- `password: string` - The password to analyze
+
+#### Returns
+
+- A comprehensive object containing:
+  - `strength: PasswordStrength` - Password strength assessment
+  - `entropy: EntropyDetails` - Entropy calculation
+  - `crackTime: CrackTimeEstimates` - Crack time estimation
+  - `patterns: PasswordPatternAnalysis` - Pattern analysis
 
 ## 🤝 Contributing
 

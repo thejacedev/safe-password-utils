@@ -397,3 +397,164 @@ export function estimateCrackTime(password: string): CrackTimeEstimates {
     },
   };
 }
+
+/**
+ * Represents detected patterns in a password that might make it vulnerable
+ */
+export interface PasswordPatternAnalysis {
+  /** Whether the password contains keyboard patterns (e.g., 'qwerty', 'asdfgh') */
+  hasKeyboardPattern: boolean;
+  /** Whether the password contains sequential characters (e.g., 'abc', '123') */
+  hasSequentialChars: boolean;
+  /** Whether the password contains repeated characters (e.g., 'aaa', '111') */
+  hasRepeatedChars: boolean;
+  /** Whether the password contains date patterns (e.g., '1990', '2023') */
+  hasDatePattern: boolean;
+  /** Overall risk score from 0 (no patterns) to 100 (highly patterned) */
+  patternRiskScore: number;
+  /** Specific patterns detected in the password */
+  detectedPatterns: string[];
+  /** Suggestions to improve the password */
+  suggestions: string[];
+}
+
+// Common keyboard patterns (QWERTY layout)
+const KEYBOARD_PATTERNS = [
+  'qwerty', 'asdfgh', 'zxcvbn', 'qwertz', 'azerty',
+  '1qaz', '2wsx', '3edc', '4rfv', '5tgb', '6yhn', '7ujm', '8ik,', '9ol.', '0p;/',
+  'qaz', 'wsx', 'edc', 'rfv', 'tgb', 'yhn', 'ujm', 'ik,', 'ol.', 'p;/'
+];
+
+/**
+ * Analyzes a password for common patterns that might make it vulnerable
+ * @param password The password to analyze
+ * @returns Analysis of patterns found in the password
+ * 
+ * @example
+ * ```typescript
+ * // Check if a password contains predictable patterns
+ * const analysis = analyzePasswordPatterns('qwerty123');
+ * console.log(analysis.hasKeyboardPattern); // true
+ * console.log(analysis.patternRiskScore); // 75
+ * console.log(analysis.suggestions); // ['Avoid keyboard patterns like "qwerty"', ...]
+ * ```
+ */
+export function analyzePasswordPatterns(password: string): PasswordPatternAnalysis {
+  const lowerPassword = password.toLowerCase();
+  const result: PasswordPatternAnalysis = {
+    hasKeyboardPattern: false,
+    hasSequentialChars: false,
+    hasRepeatedChars: false,
+    hasDatePattern: false,
+    patternRiskScore: 0,
+    detectedPatterns: [],
+    suggestions: []
+  };
+  
+  // Check for keyboard patterns
+  for (const pattern of KEYBOARD_PATTERNS) {
+    if (lowerPassword.includes(pattern)) {
+      result.hasKeyboardPattern = true;
+      result.detectedPatterns.push(`Keyboard pattern: "${pattern}"`);
+      break;
+    }
+  }
+  
+  // Check for sequential characters (alphabetic)
+  const alphabeticSeq = 'abcdefghijklmnopqrstuvwxyz';
+  for (let i = 0; i < alphabeticSeq.length - 2; i++) {
+    const seq = alphabeticSeq.substring(i, i + 3);
+    if (lowerPassword.includes(seq)) {
+      result.hasSequentialChars = true;
+      result.detectedPatterns.push(`Sequential letters: "${seq}"`);
+      break;
+    }
+  }
+  
+  // Check for sequential characters (numeric)
+  const numericSeq = '0123456789';
+  for (let i = 0; i < numericSeq.length - 2; i++) {
+    const seq = numericSeq.substring(i, i + 3);
+    if (lowerPassword.includes(seq)) {
+      result.hasSequentialChars = true;
+      result.detectedPatterns.push(`Sequential numbers: "${seq}"`);
+      break;
+    }
+  }
+  
+  // Check for repeated characters (3 or more)
+  const repeatedCharsRegex = /(.)\1{2,}/;
+  if (repeatedCharsRegex.test(lowerPassword)) {
+    result.hasRepeatedChars = true;
+    const match = lowerPassword.match(repeatedCharsRegex);
+    if (match) {
+      result.detectedPatterns.push(`Repeated characters: "${match[0]}"`);
+    }
+  }
+  
+  // Check for date patterns (19xx or 20xx)
+  const dateRegex = /(19|20)\d{2}/;
+  if (dateRegex.test(lowerPassword)) {
+    result.hasDatePattern = true;
+    const match = lowerPassword.match(dateRegex);
+    if (match) {
+      result.detectedPatterns.push(`Possible date/year: "${match[0]}"`);
+    }
+  }
+  
+  // Calculate risk score based on patterns found
+  let riskScore = 0;
+  if (result.hasKeyboardPattern) riskScore += 30;
+  if (result.hasSequentialChars) riskScore += 25;
+  if (result.hasRepeatedChars) riskScore += 20;
+  if (result.hasDatePattern) riskScore += 25;
+  
+  // Cap the score at 100
+  result.patternRiskScore = Math.min(100, riskScore);
+  
+  // Generate suggestions based on detected patterns
+  if (result.hasKeyboardPattern) {
+    result.suggestions.push('Avoid keyboard patterns like "qwerty" or "asdfgh"');
+  }
+  if (result.hasSequentialChars) {
+    result.suggestions.push('Avoid sequential characters like "abc" or "123"');
+  }
+  if (result.hasRepeatedChars) {
+    result.suggestions.push('Avoid repeating the same character multiple times');
+  }
+  if (result.hasDatePattern) {
+    result.suggestions.push('Avoid using years or dates that might be associated with you');
+  }
+  
+  // Add general suggestions if the risk score is high
+  if (result.patternRiskScore > 50) {
+    result.suggestions.push('Consider using a randomly generated password instead');
+  }
+  
+  return result;
+}
+
+/**
+ * Comprehensive password analysis that combines strength checking, entropy calculation,
+ * crack time estimation, and pattern detection
+ * @param password The password to analyze
+ * @returns A comprehensive analysis of the password
+ * 
+ * @example
+ * ```typescript
+ * // Get a comprehensive analysis of a password
+ * const analysis = analyzePassword('Password123!');
+ * console.log(analysis.strength.value); // 'Medium'
+ * console.log(analysis.entropy.entropy); // 75.24
+ * console.log(analysis.patterns.patternRiskScore); // 25
+ * console.log(analysis.crackTime.timeToCrack.offlineSlowHashing); // '3 months'
+ * ```
+ */
+export function analyzePassword(password: string) {
+  return {
+    strength: checkPasswordStrength(password),
+    entropy: calculatePasswordEntropy(password),
+    crackTime: estimateCrackTime(password),
+    patterns: analyzePasswordPatterns(password)
+  };
+}
