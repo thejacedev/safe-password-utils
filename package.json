@@ -1,6 +1,6 @@
 {
     "name": "safepassword-utils",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "A secure and flexible password generation and validation utility for TypeScript/JavaScript applications",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
@@ -44,12 +44,12 @@
     "license": "MPL-2.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/TheRealPerson98/safe-password-utils"
+        "url": "git+https://github.com/thejacedev/safe-password-utils"
     },
     "bugs": {
-        "url": "https://github.com/TheRealPerson98/safe-password-utils/issues"
+        "url": "https://github.com/thejacedev/safe-password-utils/issues"
     },
-    "homepage": "https://github.com/TheRealPerson98/safe-password-utils#readme",
+    "homepage": "https://github.com/thejacedev/safe-password-utils#readme",
     "jest": {
         "testEnvironment": "node",
         "testMatch": [

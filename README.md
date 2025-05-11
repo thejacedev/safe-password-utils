@@ -1,6 +1,6 @@
 # 🔒 safe-password-utils
 
-[![CI](https://github.com/TheRealPerson98/safe-password-utils/actions/workflows/ci.yml/badge.svg)](https://github.com/TheRealPerson98/safe-password-utils/actions/workflows/ci.yml)
+[![CI](https://github.com/thejacedev/safe-password-utils/actions/workflows/ci.yml/badge.svg)](https://github.com/thejacedev/safe-password-utils/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/safepassword-utils.svg)](https://www.npmjs.com/package/safepassword-utils)
 [![License: MPL-2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 [![Node.js Version](https://img.shields.io/node/v/safepassword-utils)](https://nodejs.org)
@@ -566,7 +566,7 @@ This project is licensed under the Mozilla Public License Version 2.0 - see the 
 
 - Built with TypeScript
 - Tested with Jest
-- Maintained by [Jace Sleeman](https://github.com/TheRealPerson98)
+- Maintained by [Jace Sleeman](https://github.com/thejacedev)
 
 ---
 
